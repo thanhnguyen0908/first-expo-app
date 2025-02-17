@@ -21,8 +21,7 @@
         "backgroundColor": "#ffffff"
       },
       "googleServicesFile": "./google-services.json",
-      "package": "com.thanhnc98.firstexpoapp",
-      "useNextNotificationsApi": true
+      "package": "com.thanhnc98.firstexpoapp"
     },
     "web": {
       "bundler": "metro",

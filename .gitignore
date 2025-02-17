@@ -38,7 +38,7 @@ yarn-error.*
 app-example
 
 
-#service files
+# service files, revert ignore when building with eas
 google-services.json
 GoogleService-Info.plist
 android/app/google-services.json

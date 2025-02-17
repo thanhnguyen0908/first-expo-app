@@ -7,12 +7,12 @@ import {
 } from "@react-navigation/native";
 import "expo-dev-client";
 import { useFonts } from "expo-font";
+import * as Notifications from "expo-notifications";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect, useRef } from "react";
-import { Alert, PermissionsAndroid, Platform } from "react-native";
+import { useEffect } from "react";
+import { PermissionsAndroid, Platform } from "react-native";
 import "react-native-reanimated";
-import * as Notifications from "expo-notifications";
 import registerForPushNotificationsAsync from "./utils/noti-permission-request";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -22,6 +22,14 @@ if (Platform.OS === "android") {
   PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 }
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
+
 messaging().setBackgroundMessageHandler(async (remoteMessage) => {
   console.log("Background Noti Handled", remoteMessage);
 });
@@ -29,7 +37,7 @@ messaging().setBackgroundMessageHandler(async (remoteMessage) => {
 // FCM Token to be used on Firebase Console
 messaging()
   .getToken()
-  .then((value) => console.log(value));
+  .then((fcmToken) => console.log("FCM Token:", fcmToken));
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
