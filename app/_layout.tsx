@@ -1,3 +1,4 @@
+import { AuthContextProvider, useAuth } from "@/context/authContext";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import messaging from "@react-native-firebase/messaging";
 import {
@@ -8,12 +9,13 @@ import {
 import "expo-dev-client";
 import { useFonts } from "expo-font";
 import * as Notifications from "expo-notifications";
-import { Stack } from "expo-router";
+import { Slot, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { PermissionsAndroid, Platform } from "react-native";
 import "react-native-reanimated";
-import registerForPushNotificationsAsync from "./utils/noti-permission-request";
+import "../global.css";
+import registerForPushNotificationsAsync from "../utils/noti-permission-request";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -39,8 +41,36 @@ messaging()
   .getToken()
   .then((fcmToken) => console.log("FCM Token:", fcmToken));
 
+const MainLayout = () => {
+  const { isAuthen } = useAuth();
+  const router = useRouter();
+  const segments = useSegments();
+
+  useEffect(() => {
+    // Wait for auth state to be determined
+    if (isAuthen === null) {
+      router.replace("/start-screen");
+      return;
+    }
+
+    // Redirect logic: If authenticated, navigate to (auth)/home
+    if (isAuthen) {
+      if (segments[0] !== "(auth)") {
+        router.replace("/(auth)/home"); // Redirect to home screen if authenticated
+      }
+    } else {
+      if (segments[0] !== "(un-auth)") {
+        router.replace("/(un-auth)/signIn"); // Redirect to signIn screen if not authenticated
+      }
+    }
+  }, [isAuthen, router, segments]);
+
+  return <Slot />;
+};
+
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
@@ -73,11 +103,10 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+    <AuthContextProvider>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <MainLayout />
+      </ThemeProvider>
+    </AuthContextProvider>
   );
 }

@@ -7,7 +7,7 @@ const projectId =
   Constants?.easConfig?.projectId;
 
 async function handleRegistrationError(errorMessage: string) {
-  alert(errorMessage);
+  console.log(errorMessage);
   throw new Error(errorMessage);
 }
 
