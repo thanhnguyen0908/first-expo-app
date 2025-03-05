@@ -39,7 +39,7 @@ messaging().setBackgroundMessageHandler(async (remoteMessage) => {
 // FCM Token to be used on Firebase Console
 messaging()
   .getToken()
-  .then((fcmToken) => console.log("FCM Token:", fcmToken));
+  .then((fcmToken) => console.log("FCM Token a:", fcmToken));
 
 const MainLayout = () => {
   const { isAuthen } = useAuth();
