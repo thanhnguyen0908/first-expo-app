@@ -4,10 +4,13 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "strict": true,
+    "baseUrl": ".",  // This is required for path aliases to work
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@context/*": ["context/*"], // Alias for context folder
+      "@components/*": ["components/*"],
+      "@constants/*": ["constants/*"],
+      "@hooks/*": ["hooks/*"],
+      "@utils/*": ["utils/*"]
     }
   },
   "include": [

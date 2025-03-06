@@ -1,5 +1,3 @@
-import { AuthContextProvider, useAuth } from "@/context/authContext";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import messaging from "@react-native-firebase/messaging";
 import {
   DarkTheme,
@@ -12,13 +10,21 @@ import * as Notifications from "expo-notifications";
 import { Slot, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import { PermissionsAndroid, Platform } from "react-native";
+import { PermissionsAndroid, Platform, useColorScheme } from "react-native";
 import "react-native-reanimated";
 import "../global.css";
-import registerForPushNotificationsAsync from "../utils/noti-permission-request";
+import { KeyboardProvider } from "react-native-keyboard-controller";
+import { useAuth, AuthContextProvider } from "@context/authContext";
+import registerForPushNotificationsAsync from "@utils/noti-permission-request";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+// Set the animation options. This is optional.
+SplashScreen.setOptions({
+  duration: 1000,
+  fade: true,
+});
 
 if (Platform.OS === "android") {
   PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
@@ -49,19 +55,16 @@ const MainLayout = () => {
   useEffect(() => {
     // Wait for auth state to be determined
     if (isAuthen === null) {
-      router.replace("/start-screen");
       return;
     }
 
+    const inTabsGroup = segments[0] === "auth";
+
     // Redirect logic: If authenticated, navigate to (auth)/home
-    if (isAuthen) {
-      if (segments[0] !== "(auth)") {
-        router.replace("/(auth)/home"); // Redirect to home screen if authenticated
-      }
-    } else {
-      if (segments[0] !== "(un-auth)") {
-        router.replace("/(un-auth)/signIn"); // Redirect to signIn screen if not authenticated
-      }
+    if (isAuthen && !inTabsGroup) {
+      router.replace("/auth/home"); // Redirect to home screen if authenticated
+    } else if (!isAuthen) {
+      router.replace("/un-auth/signIn"); // Redirect to signIn screen if not authenticated
     }
   }, [isAuthen, router, segments]);
 
@@ -105,7 +108,9 @@ export default function RootLayout() {
   return (
     <AuthContextProvider>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <MainLayout />
+        <KeyboardProvider>
+          <MainLayout />
+        </KeyboardProvider>
       </ThemeProvider>
     </AuthContextProvider>
   );
