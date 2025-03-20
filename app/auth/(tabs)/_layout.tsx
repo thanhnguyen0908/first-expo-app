@@ -1,4 +1,4 @@
-import { useAuth } from "@context/authContext";
+import { useAuth } from "context/authContext";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import React from "react";
