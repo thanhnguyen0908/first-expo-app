@@ -55,6 +55,20 @@ const removeOrientationListener = () => {
   }
 };
 
+const baseWidth = 390;
+const baseHeight = 844;
+
+export const isTablet = screenHeight / screenWidth < 1.6;
+
+// padding, margin, fontSize, ....
+export const scale = (size: number) => {
+  if (isTablet) {
+    return (screenHeight / baseHeight) * size;
+  } else {
+    return (screenWidth / baseWidth) * size;
+  }
+};
+
 export {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,

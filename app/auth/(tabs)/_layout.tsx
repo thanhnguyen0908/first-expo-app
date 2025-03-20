@@ -1,4 +1,4 @@
-import { useAuth } from "@context/authContext";
+import { useAuth } from "context/authContext";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import React from "react";
@@ -27,13 +27,24 @@ const TabsLayout = () => {
         redirect={!isAuthen}
       />
       <Tabs.Screen
+        name="stats"
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="stats-chart" size={size} color={color} />
+          ),
+          tabBarLabel: "Stats",
+        }}
+        redirect={!isAuthen}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person-outline" size={size} color={color} />
           ),
-          tabBarLabel: "My Profile",
+          tabBarLabel: "Profile",
         }}
         redirect={!isAuthen}
       />

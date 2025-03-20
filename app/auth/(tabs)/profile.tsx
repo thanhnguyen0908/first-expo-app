@@ -1,4 +1,4 @@
-import { useAuth } from "@context/authContext";
+import { useAuth } from "context/authContext";
 import { hp } from "@utils/scale";
 import React from "react";
 import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
