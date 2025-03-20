@@ -1,4 +1,4 @@
-import { useAuth } from "@context/authContext";
+import { useAuth } from "context/authContext";
 import { MaterialIcons, Octicons } from "@expo/vector-icons";
 import auth from "@react-native-firebase/auth";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";

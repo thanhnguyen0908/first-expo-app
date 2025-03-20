@@ -14,8 +14,13 @@ import { PermissionsAndroid, Platform, useColorScheme } from "react-native";
 import "react-native-reanimated";
 import "../global.css";
 import { KeyboardProvider } from "react-native-keyboard-controller";
-import { useAuth, AuthContextProvider } from "@context/authContext";
+import { useAuth, AuthContextProvider } from "context/authContext";
 import registerForPushNotificationsAsync from "@utils/noti-permission-request";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import {
+  BottomSheetModalProvider,
+} from "@gorhom/bottom-sheet";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -46,6 +51,8 @@ messaging().setBackgroundMessageHandler(async (remoteMessage) => {
 messaging()
   .getToken()
   .then((fcmToken) => console.log("FCM Token a:", fcmToken));
+
+const queryClient = new QueryClient();
 
 const MainLayout = () => {
   const { isAuthen } = useAuth();
@@ -107,11 +114,19 @@ export default function RootLayout() {
 
   return (
     <AuthContextProvider>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <KeyboardProvider>
-          <MainLayout />
-        </KeyboardProvider>
-      </ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider
+          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+        >
+          <GestureHandlerRootView>
+            <BottomSheetModalProvider>
+              <KeyboardProvider>
+                <MainLayout />
+              </KeyboardProvider>
+            </BottomSheetModalProvider>
+          </GestureHandlerRootView>
+        </ThemeProvider>
+      </QueryClientProvider>
     </AuthContextProvider>
   );
 }

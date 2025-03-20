@@ -3,7 +3,6 @@
     "name": "first-expo-app",
     "slug": "first-expo-app",
     "version": "1.0.0",
-    "scheme": "myapp",
     "newArchEnabled": true,
     "web": {
       "bundler": "metro",
